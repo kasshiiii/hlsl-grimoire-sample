@@ -54,7 +54,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     // インデックス配列
     uint16_t indices[] = {
         0,1,4,
-        1,4,3,
+        1,3,4,
         1,2,3
     };
     IndexBuffer triangleIB;
