@@ -1,5 +1,7 @@
 ﻿#include "stdafx.h"
 #include "system/system.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 // 頂点構造体
 struct SimpleVertex
@@ -38,6 +40,17 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     InitPipelineState(pipelineState, rootSignature, vs, ps);
 
     // 4. 三角形の頂点バッファを作成
+    const double PI = M_PI; // 円周率
+    const int sides = 5; // 正五角形の辺の数
+    const double radius = 1.0; // 正五角形の半径
+    SimpleVertex vertices[sides];
+    for (int i = 0; i < sides; i++) {
+        float angle = 2 * PI / sides * i; // 角度を計算する
+        float x = radius * cos(angle); // x座標を計算する
+        float y = radius * sin(angle); // y座標を計算する
+        vertices[i] = { { x,y,0 }, {x,y,1} };
+    }
+    /*
     // 頂点配列を定義
     SimpleVertex vertices[] = {
         {
@@ -61,18 +74,24 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
             { 0.0f, 0.5f, 1.0f }
         }
     };
-
+    */
     VertexBuffer triangleVB;
     triangleVB.Init(sizeof(vertices), sizeof(vertices[0]));
     triangleVB.Copy(vertices);
 
     // 5. 三角形のインデックスバッファを作成
     //インデックス配列
-    uint16_t indices[] = {
-        0,1,4,
-        1,3,4,
-        1,2,3
-    };
+    //uint16_t indices[] = {
+        //0,1,4,
+        //1,3,4,
+        //1,2,3
+    //};
+    uint16_t indices[(sides - 2) * 3];
+    for (int i = 0; i < _countof(indices); i += 3) {
+        indices[i] = 0;
+        indices[i + 1] = (i / 3) + 1;
+        indices[i + 2] = (i / 3) + 2;
+    }
     IndexBuffer triangleIB;
     triangleIB.Init(sizeof(indices), 2);
     triangleIB.Copy(indices);
