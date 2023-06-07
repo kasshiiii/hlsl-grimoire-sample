@@ -62,6 +62,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
         // step-3 ワールド行列を作成
         Matrix mWorld;
+        Matrix rWorld;
         count += 0.01f;
         moveSpeed += abs(sin(count))*0.1;
         moveX = sin(moveSpeed)/2;
@@ -75,8 +76,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
             //moveY = -0.5f;
         //}
         mWorld.MakeTranslation(moveX, moveY, 0.0f);//平行移動
-        //mWorld.MakeRotationZ(count);//回転
+        rWorld.MakeRotationZ(count);//回転
         
+        mWorld *= rWorld;
         // step-4 ワールド行列をグラフィックメモリにコピー
         cb.CopyToVRAM(mWorld);
 
