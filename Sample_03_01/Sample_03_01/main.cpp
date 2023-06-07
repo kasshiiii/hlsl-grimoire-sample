@@ -41,6 +41,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     auto& renderContext = g_graphicsEngine->GetRenderContext();
     
     float count = 0.0f;
+    float moveSpeed = 0.0f;
     float moveX = 0.0f;
     float moveY = 0.0f;
     float speedX = 0.125f;
@@ -61,9 +62,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
         // step-3 ワールド行列を作成
         Matrix mWorld;
-        count+=0.1f;
-        moveX = sin(count)/2;
-        moveY = cos(count)/2;
+        count += 0.01f;
+        moveSpeed += abs(sin(count))*0.1;
+        moveX = sin(moveSpeed)/2;
+        moveY = cos(moveSpeed)/2;
         //moveX = moveX + speedX;
         //moveY = moveY + speedY;
         //if (moveX > 1) {
@@ -74,10 +76,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         //}
         mWorld.MakeTranslation(moveX, moveY, 0.0f);//平行移動
         //mWorld.MakeRotationZ(count);//回転
+        
         // step-4 ワールド行列をグラフィックメモリにコピー
         cb.CopyToVRAM(mWorld);
+
         // step-5 ディスクリプタヒープを設定
         renderContext.SetDescriptorHeap(ds);
+
         //三角形をドロー
         triangle.Draw(renderContext);
 
