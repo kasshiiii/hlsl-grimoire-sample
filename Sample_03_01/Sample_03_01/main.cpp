@@ -1,6 +1,8 @@
 ﻿#include "stdafx.h"
 #include "system/system.h"
 #include "TrianglePolygon.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 //関数宣言
 void InitRootSignature(RootSignature& rs);
@@ -38,6 +40,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     //////////////////////////////////////
     auto& renderContext = g_graphicsEngine->GetRenderContext();
     
+    float count = 0.0f;
     float moveX = 0.0f;
     float moveY = 0.0f;
     float speedX = 0.125f;
@@ -58,15 +61,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
         // step-3 ワールド行列を作成
         Matrix mWorld;
-        moveX = moveX + speedX;
-        moveY = moveY + speedY;
-        if (moveX > 2) {
-            moveX = -2;
-        }
-        if (moveY > 2) {
-            moveY = -2;
-        }
-        mWorld.MakeTranslation(moveX, moveY, 0.0f);
+        count+=0.1f;
+        moveX = sin(count)/2;
+        moveY = cos(count)/2;
+        //moveX = moveX + speedX;
+        //moveY = moveY + speedY;
+        //if (moveX > 1) {
+            //moveX = -0.5f;
+        //}
+        //if (moveY > 1) {
+            //moveY = -0.5f;
+        //}
+        mWorld.MakeTranslation(moveX, moveY, 0.0f);//平行移動
+        //mWorld.MakeRotationZ(count);//回転
         // step-4 ワールド行列をグラフィックメモリにコピー
         cb.CopyToVRAM(mWorld);
         // step-5 ディスクリプタヒープを設定
