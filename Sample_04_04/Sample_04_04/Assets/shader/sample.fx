@@ -105,20 +105,44 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     }
 
     // 鏡面反射の強さを絞る
-    t = pow(t, 5.0f);
+    t = pow(t, 1.0f);
+    if (t < 0.1) {
+        t = 0;
+    }
+    else if (t < 0.4) {
+        t = 0.3;
+    }
+    else if (t < 0.5) {
+        t = 0.7;
+    }
+    else if (t < 0.7) {
+        t = 1.0;
+    }
+    else if (t < 0.9) {
+        t = 1.5;
+    }
+    else if (t < 0.99) {
+        t = 1.8;
+    }
+    else if (t < 1.0) {
+        t = 2.0;
+    }
 
     // 鏡面反射光を求める
     float3 specularLig = directionLight.color * t;
 
     // 拡散反射光と鏡面反射光を足し算して、最終的な光を求める
-    float3 lig = diffuseLig + specularLig;
-
+    //float3 lig = diffuseLig + specularLig;
+    float3 lig = specularLig;
     // step-1 ライトの効果を一律で底上げする
 
     float4 finalColor = g_texture.Sample(g_sampler, psIn.uv);
 
     // テクスチャカラーに求めた光を乗算して最終出力カラーを求める
     finalColor.xyz *= lig;
+    //ソラリゼーション
+    float4 temp = float4(1 - finalColor.x, 1 - finalColor.y, 1 - finalColor.z, finalColor.a);
+    finalColor = temp;
 
     return finalColor;
 }
