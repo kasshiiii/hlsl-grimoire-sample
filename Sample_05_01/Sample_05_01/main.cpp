@@ -13,6 +13,10 @@ struct Light
     float pad1;
 
     // step-1 ライト構造体にポイントライト用のメンバ変数を追加する
+    Vector3 ptPosition;
+    float pad2;
+    Vector3 ptColor;
+    float ptRange;
 
     Vector3 eyePos;         // 視点の位置
     float pad3;
@@ -63,10 +67,17 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     light.ambientLight.z = 0.3f;
 
     // step-2 ポイントライトの初期座標を設定する
+    light.ptPosition.x = 0.0f;
+    light.ptPosition.y = 50.0f;
+    light.ptPosition.z = 50.0f;
 
     // step-3 ポイントライトの初期カラーを設定する
+    light.ptColor.x = 0.0f;
+    light.ptColor.y = 0.0f;
+    light.ptColor.z = 0.0f;
 
     // step-4 ポイントライトの影響範囲を設定する
+    light.ptRange = 100.0f;
 
     // モデルを初期化する
     // モデルを初期化するための情報を構築する
@@ -78,6 +89,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     //////////////////////////////////////
     auto& renderContext = g_graphicsEngine->GetRenderContext();
 
+    float colorX = 0;
+    float colorY = 7;
+    float colorZ = 14;
+    int plusminusX = 1;
+    int plusminusY = 1;
+    int plusminusZ = 1;
+
+    float range = 50.0f;
+    int plusminusRange = 1;
+
     // ここからゲームループ
     while (DispatchWindowMessage())
     {
@@ -88,6 +109,62 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         //////////////////////////////////////
 
         // step-5 コントローラーでポイントライトを動かす
+        light.ptPosition.x -= g_pad[0]->GetLStickXF();
+        if (g_pad[0]->IsPress(enButtonB)) 
+        {
+            light.ptPosition.y += g_pad[0]->GetLStickYF();
+        }
+        else 
+        {
+            light.ptPosition.z -= g_pad[0]->GetLStickYF();
+        }
+
+        if (colorX <= 0) 
+        {
+            plusminusX = 1.0f;
+        }
+        else if (colorX >= 14)
+        {
+            plusminusX = -1.0f;
+        }
+        if (colorY <= 0)
+        {
+            plusminusY = 1.0f;
+        }
+        else if (colorY >= 14)
+        {
+            plusminusY = -1.0f;
+        }
+        if (colorZ <= 0)
+        {
+            plusminusZ = 1.0f;
+        }
+        else if (colorZ >= 14)
+        {
+            plusminusZ = -1.0f;
+        }
+
+        if (range <= 70)
+        {
+            plusminusRange = 1.0f;
+        }
+        else if (range >= 130)
+        {
+            plusminusRange = -1.0f;
+        }
+
+        colorX += 0.3f * plusminusX;
+        colorY += 0.3f * plusminusY;
+        colorZ += 0.3f * plusminusZ;
+        light.ptColor.x = colorX;
+        light.ptColor.y = colorY;
+        light.ptColor.z = colorZ;
+
+        range += 0.3f * plusminusRange;
+        light.ptRange = range;
+
+        //電球モデルのワールド行列更新する
+        lightModel.UpdateWorldMatrix(light.ptPosition, g_quatIdentity, g_vec3One);
         
         // 背景モデルをドロー
         bgModel.Draw(renderContext);
