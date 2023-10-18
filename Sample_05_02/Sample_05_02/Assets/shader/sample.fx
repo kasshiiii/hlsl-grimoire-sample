@@ -43,6 +43,7 @@ cbuffer DirectionLightCb : register(b1)
 
     // step-5 スポットライトのデータにアクセスするための変数を追加する
     float3 spPosition;
+    float affectPow;
     float3 spColor;
     float spRange;
     float3 spDirection;
@@ -150,7 +151,8 @@ float4 PSMain(SPSIn psIn) : SV_Target0
         affect = 0.0f;
     }
 
-    affect = pow(affect,0.5f);
+    affect = pow(affect,affectPow); // EX
+    //affect = pow(affect,0.5f);
 
     // step-13 角度による影響率を反射光に乗算して、影響を弱める
     diffSpotLight *= affect;
@@ -255,7 +257,7 @@ float3 CalcLigFromPointLight(SPSIn psIn)
     }
 
     // 影響の仕方を指数関数的にする。今回のサンプルでは3乗している
-    affect = pow(affect, 3.0f);
+    //affect = pow(affect, 3.0f);
 
     // 拡散反射光と鏡面反射光に減衰率を乗算して影響を弱める
     diffPoint *= affect;
