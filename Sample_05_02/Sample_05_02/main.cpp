@@ -160,15 +160,18 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         light.spColor.x = pow(sin((double)frame / 300), 2) * 10.0f;
         light.spColor.y = 10 - light.spColor.x / 2;
         light.spColor.z = 10 - light.spColor.x / 2;
-        light.affectPow = 1.5f * (float)pow(sin((double)frame / 87), 4);
+        light.affectPow = 10.0f * (float)pow(sin((double)frame / 87), 4);
+
 
         // 背景モデルをドロー
         bgModel.Draw(renderContext);
 
         //改造 ティーポット
+        Quaternion teapotQ;
+        teapotQ.SetRotationY(frame / 8);
         teapotModel.UpdateWorldMatrix(
-            { (float)sin((double)frame / 10) * 50 + 100 , 20.0f, 0.0f },
-            g_quatIdentity,
+            { (float)sin((double)frame / 10) * 30 + 100 , 20.0f, 0.0f },
+            teapotQ,
             g_vec3One * pow((float)sin((double)frame / 100),2)
         );
         teapotModel.Draw(renderContext);
