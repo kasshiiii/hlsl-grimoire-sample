@@ -35,6 +35,7 @@ cbuffer DirectionLightCb : register(b1)
     // ディレクションライト用のデータ
     float3 dirDirection;    // ライトの方向
     float3 dirColor;        // ライトのカラー
+    float exMove;//EX 
 
     // 定数バッファーにポイントライト用の変数を追加
     float3 ptPosition;      // ポイントライトの位置
@@ -210,7 +211,7 @@ float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldP
     t = max(0.0f, t);
 
     // 鏡面反射の強さを絞る
-    t = pow(t, 15.0f);
+    t = pow(t, exMove);
 
     // 鏡面反射光を求める
     return lightColor * t;

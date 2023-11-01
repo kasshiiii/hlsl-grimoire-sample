@@ -10,7 +10,7 @@ struct Light
     Vector3 dirDirection;   // ライトの方向
     float pad0;
     Vector3 dirColor;       // ライトのカラー
-    float pad1;
+    float exMove; //EX Phong
 
     // ライト構造体にポイントライト用のメンバ変数を追加
     Vector3 ptPosition;     // 位置
@@ -161,6 +161,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         light.spColor.y = 10 - light.spColor.x / 2;
         light.spColor.z = 10 - light.spColor.x / 2;
         light.affectPow = 10.0f * (float)pow(sin((double)frame / 87), 4);
+
+        light.exMove = (float)pow(sin((double)frame / 87), 2) * 25;
 
 
         // 背景モデルをドロー
