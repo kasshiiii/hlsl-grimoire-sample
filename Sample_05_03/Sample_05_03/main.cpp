@@ -73,6 +73,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         qRotY.SetRotation(g_vec3AxisY, g_pad[0]->GetLStickXF() * 0.02f);
         qRotY.Apply(light.dirDirection);
 
+
         // 背景モデルをドロー
         // bgModel.Draw(renderContext);
 
