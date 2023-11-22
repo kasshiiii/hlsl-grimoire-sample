@@ -25,6 +25,8 @@ void InitDirectionLight(Light& light);
 void InitPointLight(Light& light);
 void InitAmbientLight(Light& light);
 
+int frame = 0;
+
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数
 ///////////////////////////////////////////////////////////////////
@@ -67,6 +69,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         //////////////////////////////////////
         // ここから絵を描くコードを記述する
         //////////////////////////////////////
+        frame++;
 
         // ライトを回す
         Quaternion qRotY;
@@ -76,6 +79,17 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
         // 背景モデルをドロー
         // bgModel.Draw(renderContext);
+        Quaternion teapot1,teapot2;
+        teapot1.SetRotationY((float)frame / 64);
+        teapot2.SetRotationX((float)frame / 1024);
+        teapot1 *= teapot2;
+        teapotModel.UpdateWorldMatrix
+        (
+            { 0.0f,20.0f,0.0f },
+            teapot1,
+            { 1.5f,1.5f,1.5f }
+        );
+
 
         // ティーポットモデルをドロー
         teapotModel.Draw(renderContext);
