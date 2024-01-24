@@ -25,18 +25,64 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     //////////////////////////////////////
 
     // step-1 ルートシグネチャを作成
+    RootSignature rootSignature;
+    InitRootSignature(rootSignature);
 
     // step-2 シェーダーをロード
+    Shader vs, ps;
+    vs.LoadVS("Assets/shader/sample.fx", "VSMain");
+    ps.LoadPS("Assets/shader/sample.fx", "PSMain");
 
     // step-3 パイプラインステートを作成
+    PipelineState pipelineState;
+    InitPipelineState(pipelineState, rootSignature, vs, ps);
 
     // step-4 四角形の板ポリの頂点バッファを作成
+    // 頂点配列を定義
+    SimpleVertex vertices[] = {
+        {
+            { -1.0f, -1.0f, 0.0f, 1.0f },   // 座標
+            { 0.0f, 1.0f},                  // UV座標
+        },
+        {
+            { 1.0f, 1.0f, 0.0f, 1.0f },     // 座標
+            { 1.0f, 0.0f},                  // UV座標
+        },
+        {
+            { 1.0f, -1.0f, 0.0f, 1.0f },    // 座標
+            { 1.0f, 1.0f},                  // UV座標
+        },
+        {
+            { -1.0f, 1.0f, 0.0f, 1.0f },    // 座標
+            { 0.0f, 0.0f},                  // UV座標
+        }
+    };
+
+    // 頂点配列から頂点バッファを作成
+    VertexBuffer triangleVB;
+    triangleVB.Init(sizeof(vertices), sizeof(vertices[0]));
+    triangleVB.Copy(vertices);
 
     // step-5 板ポリのインデックスバッファを作成
+    //インデックスの配列
+    uint16_t indices[] = {
+        0, 1, 2,
+        3, 1, 0,
+    };
+
+    // インデックスの配列からインデックスバッファを作成する
+    IndexBuffer triangleIB;
+    triangleIB.Init(sizeof(indices), 2);
+    triangleIB.Copy(indices);
 
     // step-6 テクスチャをロード
+    Texture texture;
+    texture.InitFromDDSFile(L"Assets/image/test.dds");
 
     // step-7 ディスクリプタヒープを作成
+    DescriptorHeap ds;
+    ds.RegistShaderResource(0, texture);
+    ds.Commit();
 
     //////////////////////////////////////
     // 初期化を行うコードを書くのはここまで！！！
@@ -54,6 +100,20 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         //////////////////////////////////////
 
         // step-8 ドローコールを実行
+        // ルートシグネチャを設定
+        renderContext.SetRootSignature(rootSignature);
+        // パイプラインステートを設定
+        renderContext.SetPipelineState(pipelineState);
+        // プリミティブのトポロジーを設定
+        renderContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        // 頂点バッファを設定
+        renderContext.SetVertexBuffer(triangleVB);
+        // インデックスバッファを設定
+        renderContext.SetIndexBuffer(triangleIB);
+        // ディスクリプタヒープを登録
+        renderContext.SetDescriptorHeap(ds);
+        //ドローコール
+        renderContext.DrawIndexed(6); // 引数はインデックスの数
 
         /// //////////////////////////////////////
         //絵を描くコードを書くのはここまで！！！
